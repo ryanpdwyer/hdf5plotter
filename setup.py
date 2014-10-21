@@ -3,10 +3,8 @@
 import os
 import sys
 
-try:
-    from setuptools import setup
-except ImportError:
-    from distutils.core import setup
+
+from setuptools import setup
 
 
 if sys.argv[-1] == 'publish':
@@ -28,11 +26,10 @@ setup(
     long_description=readme + '\n\n' + doclink + '\n\n' + history,
     author='Ryan Dwyer',
     author_email='ryanpdwyer@gmail.com',
-    url='https://github.com/ryanpdwyer/hdf5-plotter',
+    url='https://github.com/ryanpdwyer/hdf5plotter',
     packages=[
-        'hdf5plotter',
+        'hdf5plotter'
     ],
-    package_dir={'hdf5plotter': 'hdf5plotter'},
     include_package_data=True,
     install_requires=['numpy', 'matplotlib', 'h5py', 'pint'],
     tests_require=['nose>=1.0'],
