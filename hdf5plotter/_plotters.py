@@ -19,9 +19,9 @@ class PlotFromManyFiles(object):
     def add(self, filename, group='/'):
         """Adds the group from filename to the """
         fh = h5py.File(filename)
-        self.groups.append(fh)
+        self.groups.append(fh[group])
 
-    def __del__(self):
+    def close(self):
         """Close open h5py files on delete."""
         for group in self.groups:
             group.file.close()

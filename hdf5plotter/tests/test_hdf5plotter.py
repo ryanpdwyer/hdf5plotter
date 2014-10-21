@@ -63,7 +63,7 @@ class TestPlotFromManyFiles_init(unittest.TestCase):
         self.plotter.add(self.filename)
 
     def tearDown(self):
-        self.f.close()
+        self.plotter.close()
         silentremove(self.filename)
 
 
@@ -127,7 +127,7 @@ class TestPlotFromManyFiles_rescale(unittest.TestCase):
             eq_(val, y_um_attrs[key])
 
     def tearDown(self):
-        self.f.close()
+        self.plotter.close()
         silentremove(self.filename)
 
 
@@ -182,5 +182,5 @@ class TestPlotFromManyFiles_map(unittest.TestCase):
             eq_(val, y_sqrt.attrs[key])
 
     def tearDown(self):
-        self.f.close()
+        self.plotter.close()
         silentremove(self.filename)
