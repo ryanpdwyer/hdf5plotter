@@ -19,13 +19,7 @@ class PlotFromManyFiles(object):
     def add(self, filename, group='/'):
         """Adds the group from filename, or a list of filenames,
         to the list of groups."""
-        if is_container(filename):
-            for fname in filename:
-                fh = h5py.File(fname)
-                self.groups.append(fh[group])
-        else:
-            fh = h5py.File(filename)
-            self.groups.append(fh[group])
+        self.groups.append(h5py.File(filename)[group])
 
     def close(self):
         """Close open h5py files on delete."""
