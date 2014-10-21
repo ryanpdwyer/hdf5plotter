@@ -4,9 +4,14 @@ from __future__ import division, print_function
 import h5py
 import matplotlib as mpl
 
+from hdf5plotter import silent_del, u
+from hdf5plotter._util import (replace_unit_label, replace_latex_label,
+                               get_unit_attr)
+
 
 class PlotFromManyFiles(object):
-    """A prototype of a plottting class that plots one dataset from many files."""
+    """A prototype of a plottting class that plots one dataset from
+    many files."""
     def __init__(self):
         self.groups = []
         self.rcParams = {}
@@ -22,7 +27,20 @@ class PlotFromManyFiles(object):
             group.file.close()
 
     def rescale(self, old_dset, new_dset, new_unit):
-        pass
+        for group in self.groups:
+            # Make sure the new dataset doesn't exist, so we can define it
+            silent_del(group, new_dset)
+            group.copy(old_dset, new_dset)
+            old_unit = u(group[old_dset].attrs['unit'])
+            scaled_dset = (group[old_dset][:] * old_unit).to(new_unit).magnitude
+            group[new_dset][:] = scaled_dset
+            new_attrs = group[new_dset].attrs
+            new_attrs['unit'] = get_unit_attr(new_unit)
+            new_attrs['label'] = replace_unit_label(
+                new_attrs['label'], new_unit)
+            new_attrs['label_latex'] = replace_latex_label(
+                new_attrs['label_latex'], new_unit)
+
 
     def plot(self, x='x', y='y', scale='linear', shape='-', xlim=None, ylim=None,
              rcParams=None, filename=None, save_fig_kwargs={}):
