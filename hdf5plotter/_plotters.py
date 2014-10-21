@@ -98,7 +98,7 @@ class PlotFromManyFiles(object):
             fig.savefig(filename, **save_fig_kwargs)
 
         if store_fig is not None:
-            setattr(p, store_fig, Bunch(fig=fig, ax=ax))
+            setattr(self, store_fig, Bunch(fig=fig, ax=ax))
 
         self.fig = fig
         self.ax = ax
