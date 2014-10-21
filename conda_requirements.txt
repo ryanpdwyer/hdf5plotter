@@ -4,3 +4,4 @@
 h5py=2.3.1=np19py27_0
 hdf5=1.8.13=1
 numpy=1.9.0=py27_0
+matplotlib=1.4.0=np19py27_0
