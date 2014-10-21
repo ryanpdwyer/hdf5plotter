@@ -62,9 +62,8 @@ class PlotFromManyFiles(object):
 
 
     def plot(self, x='x', y='y', scale='linear', shape='-', xlim=None, ylim=None,
-             rcParams=None, filename=None, save_fig_kwargs={}):
-        if rcParams is not None:
-            self.rcParams = rcParams
+            filename=None, save_fig_kwargs={}):
+
         for key, val in self.rcParams.items():
             mpl.rcParams[key] = val
 
@@ -72,11 +71,11 @@ class PlotFromManyFiles(object):
 
         fig, ax = plt.subplots()
 
-        plotting_functions = OrderedDict((
-        ('linear', ax.plot),
-        ('semilogy', ax.semilogy),
-        ('semilogx', ax.semilogx),
-        ('loglog', ax.loglog)))
+        plotting_functions = {
+            'linear': ax.plot,
+            'semilogy': ax.semilogy,
+            'semilogx': ax.semilogx,
+            'loglog': ax.loglog}
 
         plot = plotting_functions[scale]
 
