@@ -54,6 +54,8 @@ class TestPlotFromManyFiles_init(unittest.TestCase):
                               (u'help', u'Displacement example'),
                               (u'n_avg', 1.0)))
         update_attrs(self.f['y'].attrs, y_attrs)
+        self.f.close()
+        del self.f
 
     def test__init__(self):
         self.plotter = PlotFromManyFiles()
@@ -61,6 +63,8 @@ class TestPlotFromManyFiles_init(unittest.TestCase):
     def test_add(self):
         self.plotter = PlotFromManyFiles()
         self.plotter.add(self.filename)
+        print(self.plotter.groups)
+
 
     def tearDown(self):
         self.plotter.close()

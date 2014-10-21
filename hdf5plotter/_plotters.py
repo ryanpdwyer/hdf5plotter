@@ -14,12 +14,15 @@ class PlotFromManyFiles(object):
     many files."""
     def __init__(self):
         self.groups = []
+        self.files = set()
         self.rcParams = {}
 
     def add(self, filename, group='/'):
         """Adds the group from filename, or a list of filenames,
         to the list of groups."""
-        self.groups.append(h5py.File(filename)[group])
+        fh = h5py.File(filename)
+        self.files.add(fh)
+        self.groups.append(fh[group])
 
     def close(self):
         """Close open h5py files on delete."""
