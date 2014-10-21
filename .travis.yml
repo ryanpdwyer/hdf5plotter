@@ -29,7 +29,6 @@ install:
   - conda install -n test-environment --file conda_requirements.txt
   - source activate test-environment
   - pip install -r pip_requirements.txt
-  - python setup.py build_ext --inplace
   - python setup.py install
   - python setup.py test
  

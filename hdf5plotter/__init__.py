@@ -15,83 +15,8 @@ __email__ = 'ryanpdwyer@gmail.com'
 __version__ = '0.1.0'
 
 import h5py
-
-class PlotFromManyFiles(object):
-    """A prototype of a plottting class that plots one dataset from many files."""
-    def __init__(self):
-        self.groups = []
-        self.rcParams = {}
-
-    def add(self, filename, group='/'):
-        """Adds the group from filename to the """
-        fh = h5py.File(filename)
-        self.groups.append(fh)
-
-    def __del__(self):
-        """Close open h5py files on delete."""
-        for group in self.groups:
-            group.file.close()
-
-    def plot(self, x='x', y='y', scale='linear', shape='-', xlim=None, ylim=None,
-             rcParams=None, filename=None, save_fig_kwargs={}):
-        if rcParams is not None:
-            self.rcParams = rcParams
-        for key, val in self.rcParams.items():
-            mpl.rcParams[key] = val
-
-        import matplotlib.pyplot as plt
-
-        fig, ax = plt.subplots()
-
-        plotting_functions = OrderedDict((
-        ('linear', ax.plot),
-        ('semilogy', ax.semilogy),
-        ('semilogx', ax.semilogx),
-        ('loglog', ax.loglog)))
-
-        plot = plotting_functions[scale]
-
-        for group in self.groups:
-            line = plot(group[x].value, group[y].value, shape)
-
-        ax.set_xlabel(group[x].attrs['label'])
-        ax.set_ylabel(group[y].attrs['label'])
-
-        if xlim is not None:
-            ax.set_xlim(xlim)
-        if ylim is not None:
-            ax.set_ylim(ylim)
-
-        fig.canvas.draw()
-
-        if filename is not None:
-            fig.savefig(filename, **save_fig_kwargs)
-
-        self.fig = fig
-        self.ax = ax
-        return fig, ax
-
-
-def h5_list(f):
-    def print_all(name):
-        """Don't ever return a value, just none, so that we walk through
-        all values of the file"""
-        print(name)
-        return None
-    f.visit(print_all)
-
-
-def silent_del(f, key):
-    """Delete 'key' from the hdf5 file f, if it exists. If not, do nothing."""
-    try:
-        del f[key]
-    except KeyError:
-        pass
-
-
-def update_attrs(attrs, dict_of_attrs):
-    for key, val in dict_of_attrs.iteritems():
-        attrs[key] = val
+from hdf5plotter._util import silent_del, h5_list, update_attrs, u
+from hdf5plotter._plotters import PlotFromManyFiles
 
 
 def make_uF_array(plotter):
