@@ -26,8 +26,8 @@ before_install:
 # Install packages
 install:
   - conda create -q -n test-environment python=$TRAVIS_PYTHON_VERSION pip atlas
-  - conda install -n test-environment --file conda_requirements.txt
   - source activate test-environment
+  - conda install numpy matplotlib h5py
   - pip install -r pip_requirements.txt
   - python setup.py install
   - python setup.py test
