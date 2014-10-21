@@ -3,6 +3,8 @@ from __future__ import division, print_function
 
 import h5py
 import matplotlib as mpl
+from bunch import Bunch
+
 
 from hdf5plotter import silent_del, u, update_attrs
 from hdf5plotter._util import (replace_unit_label, replace_latex_label,
@@ -62,7 +64,7 @@ class PlotFromManyFiles(object):
 
 
     def plot(self, x='x', y='y', scale='linear', shape='-', xlim=None, ylim=None,
-            filename=None, save_fig_kwargs={}):
+            filename=None, save_fig_kwargs={}, store_fig=None):
 
         for key, val in self.rcParams.items():
             mpl.rcParams[key] = val
@@ -94,6 +96,9 @@ class PlotFromManyFiles(object):
 
         if filename is not None:
             fig.savefig(filename, **save_fig_kwargs)
+
+        if store_fig is not None:
+            setattr(p, store_fig, Bunch(fig=fig, ax=ax))
 
         self.fig = fig
         self.ax = ax
