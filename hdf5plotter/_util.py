@@ -7,6 +7,11 @@ import re
 u = pint.UnitRegistry()
 
 
+def is_container(obj):
+    """Check that an object is a container, but not a string."""
+    return hasattr(obj, '__iter__') and not isinstance(obj, str)
+
+
 def make_quantity(quantity_or_string):
     if isinstance(quantity_or_string, pint.compat.string_types):
         return u(quantity_or_string)

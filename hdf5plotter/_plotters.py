@@ -6,7 +6,7 @@ import matplotlib as mpl
 
 from hdf5plotter import silent_del, u, update_attrs
 from hdf5plotter._util import (replace_unit_label, replace_latex_label,
-                               get_unit_attr)
+                               get_unit_attr, is_container)
 
 
 class PlotFromManyFiles(object):
@@ -17,9 +17,15 @@ class PlotFromManyFiles(object):
         self.rcParams = {}
 
     def add(self, filename, group='/'):
-        """Adds the group from filename to the """
-        fh = h5py.File(filename)
-        self.groups.append(fh[group])
+        """Adds the group from filename, or a list of filenames,
+        to the list of groups."""
+        if is_container(filename):
+            for fname in filename:
+                fh = h5py.File(fname)
+                self.groups.append(fh[group])
+        else:
+            fh = h5py.File(filename)
+            self.groups.append(fh[group])
 
     def close(self):
         """Close open h5py files on delete."""
