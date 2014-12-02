@@ -6,6 +6,7 @@ import numpy as np
 from numpy.testing import assert_array_equal, assert_array_max_ulp
 from nose.tools import eq_
 
+
 from hdf5plotter.tests import silentremove
 from hdf5plotter import silent_del, update_attrs, PlotFromManyFiles, u
 
@@ -114,6 +115,46 @@ class TestPlotFromManyFiles_rescale(unittest.TestCase):
         for key, val in exp_x_s_attrs.items():
             eq_(val, x_s_attrs[key])
 
+    def test_rescale_twice(self):
+        x_sec = self.f['x'][:] / 1000
+        self.plotter.rescale('x', 'x_s', 's')
+        # Rescale twice; make sure the rescale function can handle this
+        self.plotter.rescale('x', 'x_s', 's')
+        
+        assert_array_max_ulp(self.plotter.groups[0]['x_s'][:], x_sec, 5)
+
+        x_s_attrs = self.f['x_s'].attrs
+
+        exp_x_s_attrs = OrderedDict((
+            (u'name', "Time"),
+            (u'unit', u's'),
+            (u'label', u"Time [s]"),
+            (u'label_latex', u'Time $t \\: [\\mathrm{s}]$'),
+            (u'help', u'Time example')))
+
+        for key, val in exp_x_s_attrs.items():
+            eq_(val, x_s_attrs[key])
+
+    def test_rescale_different_units(self):
+        x_s = self.f['x'][:] * 1000000
+        self.plotter.rescale('x', 'x_s', 's')
+        # Rescale twice; make sure the rescale function can handle this
+        self.plotter.rescale('x', 'x_s', 'ns')
+        
+        assert_array_max_ulp(self.plotter.groups[0]['x_s'][:], x_s, 5)
+
+        x_s_attrs = self.f['x_s'].attrs
+
+        exp_x_s_attrs = OrderedDict((
+            (u'name', "Time"),
+            (u'unit', u'ns'),
+            (u'label', u"Time [ns]"),
+            (u'label_latex', u'Time $t \\: [\\mathrm{ns}]$'),
+            (u'help', u'Time example')))
+
+        for key, val in exp_x_s_attrs.items():
+            eq_(val, x_s_attrs[key])
+
     def test_rescale_squared_micro_prefix(self):
         y_um = self.f['y'][:] / 1000**2
         self.plotter.rescale('y', 'y_um', u.um**2)
@@ -184,6 +225,42 @@ class TestPlotFromManyFiles_map(unittest.TestCase):
 
         for key, val in new_attrs.items():
             eq_(val, y_sqrt.attrs[key])
+
+    def tearDown(self):
+        self.plotter.close()
+        silentremove(self.filename)
+
+class TestPlotFromManyFiles_to_DataFrame(unittest.TestCase):
+    filename = '.TestPlotFromManyFiles_to_DataFrame.h5'
+
+    def setUp(self):
+        silentremove(self.filename)
+        self.f = h5py.File(self.filename)
+        self.f['x'] = np.arange(0, 10, 0.1, dtype=np.float64)
+        self.f['y'] = 100*np.sin(self.f['x'][:])
+        x_attrs = OrderedDict(((u'name', "Time"),
+                              (u'unit', u'ms'),
+                              (u'label', u"Time [ms]"),
+                              (u'label_latex', u'Time $t \\: [\\mathrm{ms}]$'),
+                              (u'help', u'Time example')))
+        update_attrs(self.f['x'].attrs, x_attrs)
+
+        y_attrs = OrderedDict(((u'name', "Displacement"),
+                              (u'unit', u'nm'),
+                              (u'label', u"z [nm]"),
+                              (u'label_latex', u'$z \\: [\\mathrm{nm}]$'),
+                              (u'help', u'Displacement example'),
+                              (u'n_avg', 1.0)))
+        update_attrs(self.f['y'].attrs, y_attrs)
+
+        self.plotter = PlotFromManyFiles()
+        self.plotter.add(self.filename)
+
+    def test_to_dataframe(self):
+        df = self.plotter.to_DataFrame(['x', 'y'], index=0)
+        group = self.plotter.groups[0]
+        assert_array_max_ulp(group['x'][:], df['Time'].values)
+        assert_array_max_ulp(group['y'][:], df['Displacement'].values)
 
     def tearDown(self):
         self.plotter.close()

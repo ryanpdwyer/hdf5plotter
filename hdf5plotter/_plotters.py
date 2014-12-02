@@ -4,6 +4,8 @@ from __future__ import division, print_function
 import h5py
 import matplotlib as mpl
 from bunch import Bunch
+import numpy as np
+import pandas as pd
 
 
 from hdf5plotter import silent_del, u, update_attrs
@@ -24,7 +26,11 @@ class PlotFromManyFiles(object):
         to the list of groups."""
         fh = h5py.File(filename)
         self.files.add(fh)
-        self.groups.append(fh[group])
+        self.add_group(fh[group])
+
+    def add_group(self, h5_group):
+        """Add group to the list of groups we are plotting."""
+        self.groups.append(h5_group)
 
     def close(self):
         """Close open h5py files on delete."""
@@ -37,13 +43,19 @@ class PlotFromManyFiles(object):
         if new_dset == old_dset:
             raise ValueError("'new_dset' and 'old_dset' must be different.")
         for group in self.groups:
-            # Make sure the new dataset doesn't exist, so we can define it
-            silent_del(group, new_dset)
-            group.copy(old_dset, new_dset)
+            # Calculate the new value
             old_unit = u(group[old_dset].attrs['unit'])
             scaled_dset = (group[old_dset][:] * old_unit).to(new_unit).magnitude
-            group[new_dset][:] = scaled_dset
+            if group.get(new_dset) is None:
+                pass
+            elif np.allclose(group.get(new_dset)[:], scaled_dset):
+                break
+            else:
+                silent_del(group, new_dset)
 
+            # Copy the dataset:
+            group.copy(old_dset, new_dset)
+            group[new_dset][:] = scaled_dset
             new_attrs = group[new_dset].attrs
             # Update the unit in the new_attrs
             new_attrs['unit'] = get_unit_attr(new_unit)
@@ -60,8 +72,6 @@ class PlotFromManyFiles(object):
             silent_del(group, new_dset)
             group[new_dset] = function(group)
             update_attrs(group[new_dset].attrs, new_attrs)
-
-
 
     def plot(self, x='x', y='y', scale='linear', shape='-', xlim=None, ylim=None,
             filename=None, save_fig_kwargs={}, store_fig=None):
@@ -103,3 +113,11 @@ class PlotFromManyFiles(object):
         self.fig = fig
         self.ax = ax
         return fig, ax
+
+    def to_DataFrame(self, datasets, index=0):
+        """Return a DataFrame using the given datasets from id."""
+        group = self.groups[index]
+        data = np.r_[[group[dataset][:] for dataset in datasets]].T
+        columns = [group[dataset].attrs['name'] for dataset in datasets]
+        return pd.DataFrame(data=data, columns=columns)
+

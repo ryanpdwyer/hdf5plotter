@@ -31,7 +31,7 @@ setup(
         'hdf5plotter'
     ],
     include_package_data=True,
-    install_requires=['numpy', 'matplotlib', 'h5py', 'pint', 'bunch'],
+    install_requires=['numpy', 'scipy', 'matplotlib', 'h5py', 'pint', 'bunch', 'pandas'],
     tests_require=['nose>=1.0'],
     test_suite='nose.collector',
     license='MIT',
