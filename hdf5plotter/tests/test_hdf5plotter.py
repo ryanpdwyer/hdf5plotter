@@ -11,7 +11,7 @@ from hdf5plotter.tests import silentremove
 from hdf5plotter import silent_del, update_attrs, PlotFromManyFiles, u
 
 
-def create_test_file(filename):
+def create_sample_h5_file(filename):
     f = h5py.File(filename)
     f['x'] = np.arange(0, 10, 0.1, dtype=np.float64)
     f['y'] = 100*np.sin(f['x'][:])
