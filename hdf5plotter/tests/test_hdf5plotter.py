@@ -31,6 +31,7 @@ def create_sample_h5_file(filename):
     update_attrs(f['y'].attrs, y_attrs)
     f.close()
 
+
 class Test_silent_del(unittest.TestCase):
     filename = '.Test_silent_del.h5'
 

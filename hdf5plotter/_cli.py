@@ -14,13 +14,13 @@ from hdf5plotter import PlotFromManyFiles
 
 @click.command()
 @click.argument('inputs', type=click.Path(exists=True), nargs=-1)
-@click.option('--output', '-o', type=str, default=None)
-@click.option('--x-data', '-x', type=str, default='x')
-@click.option('--y-data', '-y', type=str, default='y')
-@click.option('--scale', '-s', type=str, default='linear')
-@click.option('--xlim', '-xl', nargs=2, type=float)
-@click.option('--ylim', '-yl', nargs=2, type=float)
-@click.option('--seaborn/--no-seaborn', default=False)
+@click.option('--output', '-o', type=str, default=None, help='output file')
+@click.option('--x-data', '-x', type=str, default='x', help='x dataset')
+@click.option('--y-data', '-y', type=str, default='y', help='y dataset')
+@click.option('--scale', '-s', type=str, default='linear', help='plot scale: linear semilogx semilogy loglog')
+@click.option('--xlim', '-xl', nargs=2, type=float, help='x limits min max')
+@click.option('--ylim', '-yl', nargs=2, type=float, help='y limits min max')
+@click.option('--seaborn/--no-seaborn', default=False, help='Use seaborn plot style')
 def cli(inputs, output, x_data, y_data, scale, xlim, ylim, seaborn):
     if xlim == tuple():
         xlim = None
