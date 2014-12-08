@@ -122,3 +122,7 @@ def make_z(plotter):
         
         z[:] = x * 50
         update_attrs(z.attrs, attrs)
+
+from ._version import get_versions
+__version__ = get_versions()['version']
+del get_versions

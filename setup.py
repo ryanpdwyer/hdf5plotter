@@ -6,6 +6,13 @@ import sys
 
 from setuptools import setup
 
+# See https://github.com/warner/python-versioneer
+import versioneer
+versioneer.VCS = 'git'
+versioneer.versionfile_source = 'hdf5plotter/_version.py'
+versioneer.versionfile_build = 'hdf5plotter/_version.py'
+versioneer.tag_prefix = '' # tags are like 1.2.0
+versioneer.parentdir_prefix = 'hdf5plotter-' # dirname like 'myproject-1.2.0'
 
 if sys.argv[-1] == 'publish':
     os.system('python setup.py sdist upload')
@@ -21,7 +28,7 @@ history = open('HISTORY.rst').read().replace('.. :changelog:', '')
 
 setup(
     name='hdf5plotter',
-    version='0.1.0',
+    version=versioneer.get_version(),
     description='Plot data contained in HDF5 files.',
     long_description=readme + '\n\n' + doclink + '\n\n' + history,
     author='Ryan Dwyer',
@@ -31,11 +38,13 @@ setup(
         'hdf5plotter'
     ],
     include_package_data=True,
-    install_requires=['numpy', 'scipy', 'matplotlib', 'h5py', 'pint', 'bunch', 'pandas'],
+    install_requires=['numpy', 'scipy', 'matplotlib', 'h5py', 'pint', 'bunch',
+    'pandas', 'click'],
     tests_require=['nose>=1.0'],
     test_suite='nose.collector',
     license='MIT',
     zip_safe=False,
+    cmdclass=versioneer.get_cmdclass(),
     keywords='hdf5-plotter',
     classifiers=[
         'Development Status :: 2 - Pre-Alpha',
