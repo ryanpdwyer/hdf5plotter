@@ -39,12 +39,16 @@ setup(
     ],
     include_package_data=True,
     install_requires=['numpy', 'scipy', 'matplotlib', 'h5py', 'pint', 'bunch',
-    'pandas', 'click'],
+    'pandas', 'click', 'seaborn'],
     tests_require=['nose>=1.0'],
     test_suite='nose.collector',
     license='MIT',
     zip_safe=False,
     cmdclass=versioneer.get_cmdclass(),
+    entry_points="""
+        [console_scripts]
+        h5plot=hdf5plotter._cli:cli
+    """,
     keywords='hdf5-plotter',
     classifiers=[
         'Development Status :: 2 - Pre-Alpha',

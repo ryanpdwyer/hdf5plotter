@@ -11,6 +11,26 @@ from hdf5plotter.tests import silentremove
 from hdf5plotter import silent_del, update_attrs, PlotFromManyFiles, u
 
 
+def create_test_file(filename):
+    f = h5py.File(filename)
+    f['x'] = np.arange(0, 10, 0.1, dtype=np.float64)
+    f['y'] = 100*np.sin(f['x'][:])
+    x_attrs = OrderedDict(((u'name', "Time"),
+                          (u'unit', u'ms'),
+                          (u'label', u"Time [ms]"),
+                          (u'label_latex', u'Time $t \\: [\\mathrm{ms}]$'),
+                          (u'help', u'Time example')))
+    update_attrs(f['x'].attrs, x_attrs)
+
+    y_attrs = OrderedDict(((u'name', "Displacement Squared"),
+                          (u'unit', u'nm^2'),
+                          (u'label', u"z [nm\xb2]"),
+                          (u'label_latex', u'$z \\: [\\mathrm{nm}^2]$'),
+                          (u'help', u'Displacement example'),
+                          (u'n_avg', 1.0)))
+    update_attrs(f['y'].attrs, y_attrs)
+    f.close()
+
 class Test_silent_del(unittest.TestCase):
     filename = '.Test_silent_del.h5'
 
@@ -65,7 +85,6 @@ class TestPlotFromManyFiles_init(unittest.TestCase):
         self.plotter = PlotFromManyFiles()
         self.plotter.add(self.filename)
         print(self.plotter.groups)
-
 
     def tearDown(self):
         self.plotter.close()
