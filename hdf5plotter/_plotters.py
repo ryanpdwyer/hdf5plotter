@@ -121,3 +121,4 @@ class PlotFromManyFiles(object):
         columns = [group[dataset].attrs['name'] for dataset in datasets]
         return pd.DataFrame(data=data, columns=columns)
 
+

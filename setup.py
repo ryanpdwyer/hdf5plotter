@@ -3,7 +3,6 @@
 import os
 import sys
 
-
 from setuptools import setup
 
 # See https://github.com/warner/python-versioneer
@@ -48,6 +47,7 @@ setup(
     entry_points="""
         [console_scripts]
         h5plot=hdf5plotter._cli:cli
+        csvplot=hdf5plotter._cli:csvplot
     """,
     keywords='hdf5-plotter',
     classifiers=[
