@@ -41,7 +41,5 @@ def cli(inputs, output, x_data, y_data, scale, xlim, ylim, seaborn):
                      filename=output)
 
     if output is None:
-        import matplotlib.pyplot as plt
-        fig.gca()
-        plt.show()
+        fig.show()
     return 0
