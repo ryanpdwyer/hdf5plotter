@@ -27,8 +27,22 @@ def nested_iterable(x):
     return all(iterable(i) for i in x)
 
 
+def replicate(x, y, magic):
+    x = np.array(x)
+    y = np.array(y)
+    magic = np.array(magic)
+
+    if len(y.shape) > 1:
+        x_r = np.resize(x, y.shape)
+        magic_r = np.resize(magic, y.shape[0])
+    else:
+        x_r = x
+        magic_r = magic
+    return zip(x_r, y, magic_r)
+
+
 def plot(x, y, magic=None, scale='linear', xlabel=None, ylabel=None, shape=None,
-         xlim=None, ylim=None, rcParams={}):
+         xlim=None, ylim=None, rcParams={}, **plot_kwargs):
     """A all in one plotting function which adds scale, labels, limits, shape,
     and the option to specify additional parameters."""
     with mpl.rc_context(rc=rcParams):
@@ -42,27 +56,14 @@ def plot(x, y, magic=None, scale='linear', xlabel=None, ylabel=None, shape=None,
 
         plot_scale_func = plotting_functions[scale]
 
-        def plot_single(plot_func, x, y, magic):
+        def plot_single(x, y, magic, plot_kwargs):
             if magic is None:
-                return plot_func(x, y)
+                return plot_scale_func(x, y, **plot_kwargs)
             else:
-                return plot_func(x, y, magic)
+                return plot_scale_func(x, y, magic, **plot_kwargs)
 
-
-        nested_x = nested_iterable(x)
-        nested_y = nested_iterable(y)
-        iterable_magic = iterable(magic)
-
-        if nested_x and nested_x:
-            for xi, yi in zip(x, y):
-                plot_scale_func(xi, yi)
-        elif nested_y:
-            for yi in y:
-                plot_scale_func(x, yi)
-        elif nested_x:
-            raise ValueError("Give multiple y arrays for multiple x arrays")
-        else:
-            plot_scale_func(x, y)
+        for xi, yi, mi in replicate(x, y, magic):
+            plot_single(xi, yi, mi, plot_kwargs)
 
         if xlabel is not None:
             ax.set_xlabel(xlabel)
@@ -74,5 +75,8 @@ def plot(x, y, magic=None, scale='linear', xlabel=None, ylabel=None, shape=None,
         if ylim is not None:
             ax.set_ylim(ylim)
 
+        # fig.tight_layout alone was causing problems.
+        # See https://github.com/matplotlib/matplotlib/issues/2654
+        fig.draw()
         fig.tight_layout()
         return fig, ax
