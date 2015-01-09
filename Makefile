@@ -33,7 +33,7 @@ test-all:
 	tox
 
 coverage:
-	coverage run --source hdf5-plotter setup.py test
+	coverage run --source hdf5plotter setup.py test
 	coverage report -m
 	coverage html
 	open htmlcov/index.html

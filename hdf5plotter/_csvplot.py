@@ -66,6 +66,7 @@ def column(df, string):
     """Find columns containing string"""
     return tuple(col for col in df.columns if string in col)
 
+
 def get_column(df, string):
     try:
         return df[column(df, string)[0]]
@@ -73,11 +74,13 @@ def get_column(df, string):
         raise KeyError("{0} matches multiple columns in df\n{1}".format(
             string, df.columns))
 
+
 def rescale(col, new_unit):
     unit = u(unicode(get_unit(col.name)))
     scale_factor = 1.0/unit.to(new_unit).magnitude
     new_name = replace_unit_label_ascii(col.name, new_unit)
     return pd.Series(col * scale_factor, name=new_name)
+
 
 def rescale_column(df, string, new_unit):
     # Somehow I am creating a new

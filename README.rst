@@ -11,3 +11,8 @@ Features
 --------
 
 * TODO
+
+Overview
+--------
+
+Provide helpful utilities for plotting csv and hdf5 files.
