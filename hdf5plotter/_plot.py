@@ -26,11 +26,19 @@ def nested_iterable(x):
     Raises a TypeError if passed a non-iterable."""
     return all(iterable(i) for i in x)
 
+def make_nested_array(x):
+    if nested_iterable(x):
+        return np.array(x)
+    else:
+        return np.array([x])
 
 def replicate(x, y, magic):
-    x = np.array(x)
-    y = np.array(y)
-    magic = np.array(magic)
+    x = make_nested_array(x)
+    y = make_nested_array(y)
+    if magic is None:
+        magic = np.array([magic])
+    else:
+        magic = np.array(magic)
 
     if len(y.shape) > 1:
         x_r = np.resize(x, y.shape)
@@ -77,6 +85,4 @@ def plot(x, y, magic=None, scale='linear', xlabel=None, ylabel=None, shape=None,
 
         # fig.tight_layout alone was causing problems.
         # See https://github.com/matplotlib/matplotlib/issues/2654
-        fig.draw()
-        fig.tight_layout()
         return fig, ax

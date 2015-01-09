@@ -48,6 +48,7 @@ setup(
         [console_scripts]
         h5plot=hdf5plotter._cli:cli
         csvplot=hdf5plotter._cli:csvplot
+        csvscale=hdf5plotter._cli:csvscale
     """,
     keywords='hdf5-plotter',
     classifiers=[

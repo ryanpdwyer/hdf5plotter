@@ -36,6 +36,11 @@ def get_label_unit_substring(label):
         raise AttributeError("Could not find a unit substring in the label.")
 
 
+def replace_unit_label_ascii(label, quantity):
+    return label.replace(
+        get_label_unit_substring(label), get_unit_attr(quantity))
+
+
 def replace_unit_label(label, quantity):
     return label.replace(
         get_label_unit_substring(label), get_label_unit(quantity))
