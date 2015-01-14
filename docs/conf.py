@@ -28,9 +28,13 @@ MOCK_MODULES = [
     'h5py',
     'pandas',
     'seaborn',
+    'bunch',
     'matplotlib',
     'matplotlib.pyplot',
-    'scipy']
+    'scipy',
+    'click',
+    'pint']
+
 
 sys.modules.update((mod_name, Mock()) for mod_name in MOCK_MODULES)
 
