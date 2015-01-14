@@ -16,12 +16,13 @@ Contents:
    contributing
    authors
    history
+   commands
 
 
 Feedback
 ========
 
-If you have any suggestions or questions about **HDF5 Plotter** feel free to email me at ryanpdwyer@gmail.com.
+If you have any suggestions or questions about **HDF5Plotter** feel free to email me at ryanpdwyer@gmail.com.
 
-If you encounter any errors or problems with **HDF5 Plotter**, please let me know!
+If you encounter any errors or problems with **HDF5Plotter**, please let me know!
 Open an Issue at the GitHub http://github.com/ryanpdwyer/hdf5plotter main repository.

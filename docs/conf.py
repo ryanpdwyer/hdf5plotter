@@ -11,7 +11,8 @@
 # All configuration values have a default; values that are commented out
 # serve to show the default.
 
-import sys, os
+import sys
+import os
 
 # From readthedocs documentation
 from mock import MagicMock
@@ -25,8 +26,11 @@ class Mock(MagicMock):
 MOCK_MODULES = [
     'numpy',
     'h5py',
+    'pandas',
+    'seaborn',
     'matplotlib',
-    'matplotlib.pyplot']
+    'matplotlib.pyplot',
+    'scipy']
 
 sys.modules.update((mod_name, Mock()) for mod_name in MOCK_MODULES)
 
@@ -166,7 +170,7 @@ if not on_rtd:  # only import and set the theme if we're building docs locally
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = ['_static']
+html_static_path = ['_static', 'images']
 
 # If not '', a 'Last updated on:' timestamp is inserted at every page bottom,
 # using the given strftime format.

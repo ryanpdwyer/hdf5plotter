@@ -8,6 +8,22 @@ from hdf5plotter._util import replace_unit_label_ascii
 import re
 
 
+class PlotData(object):
+    name_sep = ' '
+    unit_repr = '[{:P~}]'.format
+
+    def __init__(self, values, name, unit):
+        self.values = values
+        self.name = name
+        self.unit = u(unit)
+
+    def label(self):
+        return self.name+self.name_sep+self.unit_repr(self.unit)
+
+    def __repr__(self):
+        return """{label}\n{values}""".format(label=self.label(),
+                                              values=self.values)
+
 
 
 def get_unit(string):
@@ -17,7 +33,6 @@ def get_unit(string):
         return ''
     else:
         return re.findall(r"\[.*\]", string)[0][1:-1]
-
 
 def axis(series):
     ax = series.copy()

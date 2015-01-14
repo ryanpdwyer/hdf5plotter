@@ -1,12 +1,24 @@
 # -*- coding: utf-8 -*-
-"""A simple command line interface, with the command h5plot.
+"""
+Command line interfaces
+=======================
 
-The command should look something like this:
+A simple command line interface, with the command h5plot.
 
-h5plot myfile.h5 --x-data=x --y-data=y --scale=linear\
+The command should look something like this::
+
+    h5plot myfile.h5 --x-data=x --y-data=y --scale=linear\
     --x-min=1 --x-max=10 --y-min=1 --y-max=10 --output=fig1.png
 
-h5plot myfile.h5
+    h5plot myfile.h5
+
+
+csvplot
+-------
+
+.. image:: images/ex.png
+
+Here is an example image made with ``csvplot``.
 """
 
 import click
@@ -71,7 +83,7 @@ def csvplot(inputs, output, x_data, y_data, scale, xlim, ylim):
         y.append(new_y)
 
     plot_csv(x, y, scale=scale, xlim=xlim, ylim=ylim)
-    
+
     fig.tight_layout()
 
     if output is None:
@@ -90,11 +102,10 @@ def csvplot(inputs, output, x_data, y_data, scale, xlim, ylim):
 @click.option('--separator', '-s', default=',', type=str)
 def csvscale(fname, output, column, separator):
     df = pd.read_csv(fname, sep=separator, encoding='utf-8')
-    
+
     for col, new_unit in column:
         df = rescale_column(df, col, new_unit)
 
     if output is None:
         output = fname
     df.to_csv(output, sep=separator, index=False, encoding='utf-8')
-    
