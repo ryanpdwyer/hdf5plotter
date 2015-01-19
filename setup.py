@@ -13,10 +13,6 @@ versioneer.versionfile_build = 'hdf5plotter/_version.py'
 versioneer.tag_prefix = '' # tags are like 1.2.0
 versioneer.parentdir_prefix = 'hdf5plotter-' # dirname like 'myproject-1.2.0'
 
-if sys.argv[-1] == 'publish':
-    os.system('python setup.py sdist upload')
-    sys.exit()
-
 readme = open('README.rst').read()
 doclink = """
 Documentation
@@ -50,7 +46,7 @@ setup(
         csvplot=hdf5plotter._cli:csvplot
         csvscale=hdf5plotter._cli:csvscale
     """,
-    keywords='hdf5-plotter',
+    keywords='hdf5plotter',
     classifiers=[
         'Development Status :: 2 - Pre-Alpha',
         'Intended Audience :: Developers',
