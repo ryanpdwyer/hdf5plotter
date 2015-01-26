@@ -10,7 +10,7 @@ import pandas as pd
 
 from hdf5plotter import silent_del, u, update_attrs
 from hdf5plotter._util import (replace_unit_label, replace_latex_label,
-                               get_unit_attr, is_container)
+                               get_unit_attr)
 
 
 class PlotFromManyFiles(object):

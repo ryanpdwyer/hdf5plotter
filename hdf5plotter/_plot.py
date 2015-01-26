@@ -1,7 +1,8 @@
-import numpy as np
-import collections
+# -*- coding: utf-8 -*-
 import matplotlib as mpl
 import matplotlib.pyplot as plt
+
+from hdf5plotter._util import replicate
 
 """Expectation:
 plot(x=[1, 2, 3], y=[1, 4, 9])
@@ -10,51 +11,13 @@ plot(x=[[1, 2, 3], [1, 1.5, 2, 2.5, 3]], y=[[1, 4, 9], [1, 2, 4, 6, 9]])
 """
 
 
-def iterable(x):
-    """True if x is an iterable other than a string: some sort of list-like
-    container"""
-    if isinstance(x, str):
-        return False
-    else:
-        return isinstance(x, collections.Iterable)
-
-
-def nested_iterable(x):
-    """Return true if x is (at least) list of lists, or a 2D numpy array, or
-    list of 1D numpy arrays.
-
-    Raises a TypeError if passed a non-iterable."""
-    return all(iterable(i) for i in x)
-
-def make_nested_array(x):
-    if nested_iterable(x):
-        return np.array(x)
-    else:
-        return np.array([x])
-
-def replicate(x, y, magic):
-    x = make_nested_array(x)
-    y = make_nested_array(y)
-    if magic is None:
-        magic = np.array([magic])
-    else:
-        magic = np.array(magic)
-
-    if len(y.shape) > 1:
-        x_r = np.resize(x, y.shape)
-        magic_r = np.resize(magic, y.shape[0])
-    else:
-        x_r = x
-        magic_r = magic
-    return zip(x_r, y, magic_r)
-
-
 def plot(x, y, magic=None, scale='linear', xlabel=None, ylabel=None, shape=None,
-         xlim=None, ylim=None, rcParams={}, **plot_kwargs):
+         xlim=None, ylim=None, rcParams={'backend': 'Qt4Agg'}, **plot_kwargs):
     """A all in one plotting function which adds scale, labels, limits, shape,
     and the option to specify additional parameters."""
     with mpl.rc_context(rc=rcParams):
-        fig, ax = plt.subplots()
+        fig = plt.figure()
+        ax = fig.add_subplot(111)
 
         plotting_functions = {
             'linear': ax.plot,

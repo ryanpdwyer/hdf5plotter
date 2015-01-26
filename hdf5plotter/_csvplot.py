@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 
+import re
 import pandas as pd
 import numpy as np
 from hdf5plotter import u
 from hdf5plotter._plot import plot
-from hdf5plotter._util import replace_unit_label_ascii
-import re
+from hdf5plotter._util import (replace_unit_label_ascii,
+                               nested_iterable, replace_unit_label)
 
 
 class PlotData(object):
@@ -25,7 +26,6 @@ class PlotData(object):
                                               values=self.values)
 
 
-
 def get_unit(string):
     """Return a unit string if it exists"""
     unit = re.findall(r"(\[.*\]|\(.*\))", string)
@@ -34,11 +34,13 @@ def get_unit(string):
     else:
         return re.findall(r"\[.*\]", string)[0][1:-1]
 
+
 def axis(series):
     ax = series.copy()
     ax.unit = u(get_unit(ax.name))
     ax.label = ax.name[:ax.name.find('[')]
     return ax
+
 
 def get_csv_axes(filename, x=None, y=None):
     df = pd.read_csv(filename)
@@ -56,7 +58,7 @@ def get_csv_axes(filename, x=None, y=None):
 
 
 def get_default_plot_label(series):
-    return replace_unit_label(series.name, series.unit)
+    return replace_unit_label_ascii(series.name, series.unit)
 
 
 def plot_csv(x, y, scale='linear', xlim=None, ylim=None,
@@ -74,7 +76,8 @@ def plot_csv(x, y, scale='linear', xlim=None, ylim=None,
             ylabel = y.name
 
     return plot(np.array(x), np.array(y), scale=scale,
-        xlim=xlim, ylim=ylim, xlabel=xlabel, ylabel=ylabel)
+                xlim=xlim, ylim=ylim,
+                xlabel=xlabel, ylabel=ylabel)
 
 
 def column(df, string):

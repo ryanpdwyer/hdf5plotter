@@ -21,8 +21,12 @@ csvplot
 Here is an example image made with ``csvplot``.
 """
 
+import tempfile
+
 import click
 import pandas as pd
+import matplotlib as mpl
+import matplotlib.pyplot as plt
 from hdf5plotter import PlotFromManyFiles
 from hdf5plotter._csvplot import plot_csv, get_csv_axes, rescale_column
 
@@ -56,7 +60,8 @@ def cli(inputs, output, x_data, y_data, scale, xlim, ylim, seaborn):
                      filename=output)
 
     if output is None:
-        fig.show()
+        f = tempfile.NamedTemporaryFile(delete=False)
+        fname = f.name
     return 0
 
 
@@ -78,13 +83,13 @@ def csvplot(inputs, output, x_data, y_data, scale, xlim, ylim):
     y = []
 
     for filename in inputs:
-        new_x, new_y = get_csv_axes(filename, x, y)
+        new_x, new_y = get_csv_axes(filename, x_data, y_data)
         x.append(new_x)
         y.append(new_y)
 
-    plot_csv(x, y, scale=scale, xlim=xlim, ylim=ylim)
+    fig, ax = plot_csv(x, y, scale=scale, xlim=xlim, ylim=ylim)
 
-    fig.tight_layout()
+   # fig.tight_layout()
 
     if output is None:
         fig.show()

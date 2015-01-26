@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
 from __future__ import division, print_function
 
-import pint
 import re
+import collections
+
+import numpy as np
+import pint
 
 u = pint.UnitRegistry()
 
@@ -18,7 +21,7 @@ def make_quantity(quantity_or_string):
     else:
         return quantity_or_string
 
-
+# TODO: Remove this ugly hack for pretty printing
 def get_label_unit(quantity):
     q = make_quantity(quantity)
     return "".join(u"{0:P~}".format(q).split(' ')[1:]).replace('u', u'µ')
@@ -60,6 +63,47 @@ def replace_latex_label(label_latex, quantity):
                 new_label = new_label.replace(s, "\\mathrm{{{s}}}".format(s=s))
 
     return label_latex.replace(label_unit_substring, new_label)
+
+
+def iterable(x):
+    """True if x is an iterable other than a string: some sort of list-like
+    container"""
+    if isinstance(x, str):
+        return False
+    else:
+        return isinstance(x, collections.Iterable)
+
+
+def nested_iterable(x):
+    """Return true if x is (at least) list of lists, or a 2D numpy array, or
+    list of 1D numpy arrays.
+
+    Raises a TypeError if passed a non-iterable."""
+    return all(iterable(i) for i in x)
+
+
+def make_nested_array(x):
+    if nested_iterable(x):
+        return np.array(x)
+    else:
+        return np.array([x])
+
+
+def replicate(x, y, magic):
+    x = make_nested_array(x)
+    y = make_nested_array(y)
+    if magic is None:
+        magic = np.array([magic])
+    else:
+        magic = np.array(magic)
+
+    if len(y.shape) > 1:
+        x_r = np.resize(x, y.shape)
+        magic_r = np.resize(magic, y.shape[0])
+    else:
+        x_r = x
+        magic_r = magic
+    return zip(x_r, y, magic_r)
 
 
 def h5_list(f):
