@@ -34,10 +34,11 @@ install:
 
     # Install specified version of numpy and dependencies
     - "conda install -q --yes numpy=%NUMPY_VERSION% scipy matplotlib h5py pandas seaborn"
+    - "python setup.py install"
 
 # Not a .NET project, we build SunPy in the install step instead
 build: false
 
 test_script:
-  - "%CMD_IN_ENV% python setup.py test"
+  - "python setup.py test"
 
