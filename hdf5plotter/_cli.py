@@ -21,8 +21,11 @@ csvplot
 Here is an example image made with ``csvplot``.
 """
 
+import time
 import tempfile
+import webbrowser
 
+import pathlib
 import click
 import pandas as pd
 import matplotlib as mpl
@@ -60,7 +63,14 @@ def cli(inputs, output, x_data, y_data, scale, xlim, ylim, seaborn):
                      filename=output)
 
     if output is None:
-        fig.show()
+        with tempfile.NamedTemporaryFile(suffix='.pdf') as f:
+            fig.savefig(f, format='pdf')
+            uri = pathlib.Path(f.name).absolute().as_uri()
+            webbrowser.open(uri)
+            time.sleep(5)
+    else:
+        fig.savefig(output)
+
     return 0
 
 
@@ -91,7 +101,11 @@ def csvplot(inputs, output, x_data, y_data, scale, xlim, ylim):
    # fig.tight_layout()
 
     if output is None:
-        fig.show()
+        with tempfile.NamedTemporaryFile(suffix='.pdf') as f:
+            fig.savefig(f, format='pdf')
+            uri = pathlib.Path(f.name).absolute().as_uri()
+            webbrowser.open(uri)
+            time.sleep(5)
     else:
         fig.savefig(output)
 

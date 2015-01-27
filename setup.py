@@ -34,7 +34,7 @@ setup(
     ],
     include_package_data=True,
     install_requires=['numpy', 'scipy', 'matplotlib', 'h5py', 'pint', 'bunch',
-    'pandas', 'click', 'seaborn'],
+    'pandas', 'click', 'seaborn', 'pathlib'],
     tests_require=['nose>=1.0'],
     test_suite='nose.collector',
     license='MIT',
