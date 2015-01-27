@@ -22,6 +22,8 @@ def make_quantity(quantity_or_string):
         return quantity_or_string
 
 # TODO: Remove this ugly hack for pretty printing
+# ------------------------------------------------------------------------
+# This entire section is really repetitive, contains lots of duplicated work
 def get_label_unit(quantity):
     q = make_quantity(quantity)
     return "".join(u"{0:P~}".format(q).split(' ')[1:]).replace('u', u'µ')
@@ -63,11 +65,14 @@ def replace_latex_label(label_latex, quantity):
                 new_label = new_label.replace(s, "\\mathrm{{{s}}}".format(s=s))
 
     return label_latex.replace(label_unit_substring, new_label)
+# ---------------------------------------------------------------------------
 
 
 def iterable(x):
     """True if x is an iterable other than a string: some sort of list-like
     container"""
+    # Not sure whether this works on Python3; does it capture both bytes and
+    # unicode?
     if isinstance(x, str):
         return False
     else:

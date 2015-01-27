@@ -4,5 +4,8 @@
     data every time
 
 # Command Line Tools
-- [ ] Switch from using show to creating a temporary pdf file, showing it, then deleting it
+- [x] Switch from using show to creating a temporary pdf file, showing it, then deleting it
+
+# Testing
+- [ ] Test every function in `_util`
 

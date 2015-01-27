@@ -65,7 +65,7 @@ def versions_from_parentdir(parentdir_prefix, root, verbose=False):
             print("guessing rootdir is '%s', but '%s' doesn't start with prefix '%s'" %
                   (root, dirname, parentdir_prefix))
         return None
-    return {"version": dirname[len(parentdir_prefix):].replace("_2", "+").strip(".egg"), "full": ""}
+    return {"version": dirname[len(parentdir_prefix):].replace("_", "+").strip(".egg"), "full": ""}
 
 def git_get_keywords(versionfile_abs):
     # the code embedded in _version.py can just fetch the value of these

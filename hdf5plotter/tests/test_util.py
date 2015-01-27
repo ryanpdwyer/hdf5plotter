@@ -4,10 +4,11 @@ import unittest
 import pint
 
 import numpy as np
-from numpy.testing import assert_allclose
+from numpy.testing import assert_allclose, assert_array_equal
 from nose.tools import eq_
 
-from hdf5plotter._util import (is_container, make_quantity, nested_iterable)
+from hdf5plotter._util import (is_container, make_quantity, nested_iterable,
+                               make_nested_array)
 
 
 def test_is_container():
@@ -36,9 +37,6 @@ def test_make_quantity():
         eq_(output.units, exp_output.units, msg)
 
 
-
-
-
 def test_nested_iterable():
     input_output = (
         #input, output, message
@@ -51,3 +49,19 @@ def test_nested_iterable():
 
     for input_, output, msg in input_output:
         eq_(nested_iterable(input_), output, msg)
+
+
+def test_make_nested_array():
+    input_output = (
+        #input, output, message
+        ([1, 2], np.array([[1, 2]]), 'list to 2d-array'),
+        ([[1], [3]], np.array([[1], [3]]), 'nested_list to 2-d array'),
+        ("string", np.array(["string"]), 'string to 1-d array of strings'),
+    )
+
+    for input_, output, msg in input_output:
+        assert_array_equal(make_nested_array(input_), output, err_msg=msg)
+
+
+def test_replicate():
+    pass
