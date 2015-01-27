@@ -26,7 +26,7 @@ install:
     # Install the build and runtime dependencies of the project.
     - "conda update --yes conda"
     # Create a conda environment using the astropy bonus packages
-    - "conda create -q --yes -n test python=%PYTHON_VERSION% pip"
+    - "conda create -q --yes -n test python=%PYTHON_VERSION% pip nose"
     - "activate test"
 
     # Check that we have the expected version of Python
@@ -34,11 +34,12 @@ install:
 
     # Install specified version of numpy and dependencies
     - "conda install -q --yes numpy=%NUMPY_VERSION% scipy matplotlib h5py pandas seaborn"
-    - "python setup.py install"
+    - "where python"
+    - "where pip"
 
 # Not a .NET project, we build SunPy in the install step instead
 build: false
 
 test_script:
-  - "python setup.py test"
+  - "nosetests"
 
