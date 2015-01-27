@@ -60,8 +60,7 @@ def cli(inputs, output, x_data, y_data, scale, xlim, ylim, seaborn):
                      filename=output)
 
     if output is None:
-        f = tempfile.NamedTemporaryFile(delete=False)
-        fname = f.name
+        fig.show()
     return 0
 
 
