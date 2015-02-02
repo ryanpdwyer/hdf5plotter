@@ -62,7 +62,7 @@ def get_default_plot_label(series):
 
 
 def plot_csv(x, y, scale='linear', xlim=None, ylim=None,
-             xlabel=None, ylabel=None):
+             xlabel=None, ylabel=None, rcParams={}):
     if xlabel is None:
         if nested_iterable(x):
             xlabel = replace_unit_label(x[0].name, x[0].unit)
@@ -77,7 +77,7 @@ def plot_csv(x, y, scale='linear', xlim=None, ylim=None,
 
     return plot(np.array(x), np.array(y), scale=scale,
                 xlim=xlim, ylim=ylim,
-                xlabel=xlabel, ylabel=ylabel)
+                xlabel=xlabel, ylabel=ylabel, rcParams=rcParams)
 
 
 def column(df, string):
@@ -95,7 +95,7 @@ def get_column(df, string):
 
 def rescale(col, new_unit):
     unit = u(unicode(get_unit(col.name)))
-    scale_factor = 1.0/unit.to(new_unit).magnitude
+    scale_factor = unit.to(new_unit).magnitude
     new_name = replace_unit_label_ascii(col.name, new_unit)
     return pd.Series(col * scale_factor, name=new_name)
 
