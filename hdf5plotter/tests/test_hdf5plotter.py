@@ -250,6 +250,7 @@ class TestPlotFromManyFiles_map(unittest.TestCase):
         self.plotter.close()
         silentremove(self.filename)
 
+
 class TestPlotFromManyFiles_to_DataFrame(unittest.TestCase):
     filename = '.TestPlotFromManyFiles_to_DataFrame.h5'
 

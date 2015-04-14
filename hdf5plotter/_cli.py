@@ -50,7 +50,7 @@ def show_file(path):
 @click.option('--xlim', '-xl', nargs=2, type=float, help='x limits min max')
 @click.option('--ylim', '-yl', nargs=2, type=float, help='y limits min max')
 @click.option('--seaborn/--no-seaborn', default=False, help='Use seaborn plot style')
-def cli(inputs, output, x_data, y_data, scale, xlim, ylim, seaborn):
+def h5plot(inputs, output, x_data, y_data, scale, xlim, ylim, seaborn):
     if xlim == tuple():
         xlim = None
     if ylim == tuple():
@@ -122,6 +122,7 @@ def csvplot(inputs, output, x_data, y_data, scale, xlim, ylim, format_output,
 
     fig.tight_layout()
 
+    # Create a temporary file, and open with the default pdf app
     if output is None and format_output is None:
         with tempfile.NamedTemporaryFile(suffix='.pdf') as f:
             fig.savefig(f, format='pdf')
@@ -131,10 +132,12 @@ def csvplot(inputs, output, x_data, y_data, scale, xlim, ylim, format_output,
 
         return 0
 
+    # Default to saving a plot as the input filename
+    # with the appropriate extension
     if output is None and len(inputs) == 1:
         input_name = pathlib.Path(inputs[0])
         output = str(input_name.with_suffix('.'+format_output))
-    elif output is None and len(inputs) > 1:
+    else:
         raise ValueError(
             "If plotting from multiple files, must provide output filename")
 
@@ -152,8 +155,9 @@ def csvplot(inputs, output, x_data, y_data, scale, xlim, ylim, format_output,
 @click.option('--output', '-o', default=None, type=click.Path())
 @click.option('--column', '-c', type=str, prompt=True, nargs=2,
               help="column new_unit", multiple=True)
+@click.option('--comment', type=str, default=None)
 def csvscale(fname, output, column):
-    df = pd.read_csv(fname, encoding='utf-8')
+    df = pd.read_csv(fname, encoding='utf-8', comment='#')
 
     for col, new_unit in column:
         df = rescale_column(df, col, new_unit)

@@ -34,7 +34,7 @@ setup(
     ],
     include_package_data=True,
     install_requires=['numpy', 'scipy', 'matplotlib', 'h5py', 'pint', 'bunch',
-    'pandas', 'click', 'seaborn', 'pathlib'],
+    'pandas', 'click', 'seaborn', 'pathlib', 'six'],
     tests_require=['nose>=1.0'],
     test_suite='nose.collector',
     license='MIT',
@@ -42,7 +42,7 @@ setup(
     cmdclass=versioneer.get_cmdclass(),
     entry_points="""
         [console_scripts]
-        h5plot=hdf5plotter._cli:cli
+        h5plot=hdf5plotter._cli:h5plot
         csvplot=hdf5plotter._cli:csvplot
         csvscale=hdf5plotter._cli:csvscale
     """,

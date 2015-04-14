@@ -1,13 +1,82 @@
 # -*- coding: utf-8 -*-
 from __future__ import division, print_function
 
+import h5py
+import six
 import re
 import collections
+import copy
 
 import numpy as np
 import pint
 
 u = pint.UnitRegistry()
+
+# Probably easier to get a list of all the attrs, then parse appropriately.
+
+
+def h5ls_str(g, offset='', print_types=False):
+    """Prints the input file/group/dataset (g) name and begin iterations on its
+    content.
+
+    See goo.gl/2JiUQK."""
+    string = []
+    if isinstance(g, h5py.File):
+        string.append(offset+repr(g.file))
+    elif isinstance(g, h5py.Dataset):
+        if print_types:
+            string.append(offset+g.name+'  '+repr(g.shape)+'  '+(g.dtype.str))
+        else:
+            string.append(offset+g.name+'  '+repr(g.shape))
+    elif isinstance(g, h5py.Group):
+        string.append(offset+g.name)
+    else:
+        raise ValueError('WARNING: UNKNOWN ITEM IN HDF5 FILE'+g.name)
+    if isinstance(g, h5py.File) or isinstance(g, h5py.Group):
+        for key, subg in dict(g).iteritems():
+            string.append(h5ls_str(subg, offset + '    ',
+                                   print_types=print_types))
+    return "\n".join(string)
+
+
+def h5ls(*args):
+    """List the contents of an HDF5 file object or group.
+
+    Accepts a file / group handle, or a string interpreted as the hdf5
+    file path."""
+    for arg in args:
+        if isinstance(arg, six.string_types):
+            fh = h5py.File(arg, mode='r')
+            print(h5ls_str(fh))
+            fh.close()
+        else:
+            print(h5ls_str(arg))
+
+
+def create_attr_dictionary(f):
+    d = {}
+
+    def visitarg(key, ds):
+        if isinstance(ds, h5py.Dataset):
+            d[key] = dict(ds.attrs.items())
+
+    f.visititems(visitarg)
+    return d
+
+permissive = {u'name', u'unit', u'label'}
+latex = {u'name', u'unit', u'label', u'label_latex'}
+
+
+def missing_attrs(attr_dictionary, attr_names):
+    """Gives a dictionary of missing attributes"""
+    mandatory = set(attr_names)
+    missing_attrs = {}
+    for ds_name, ds_attrs_dict in attr_dictionary.items():
+        ds_attrs_keys = set(ds_attrs_dict.keys())
+        missing_mandatory = mandatory.difference(ds_attrs_keys)
+        if missing_mandatory:
+            missing_attrs[ds_name] = tuple(missing_mandatory)
+    return missing_attrs
 
 
 def is_container(obj):

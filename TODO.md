@@ -15,6 +15,7 @@ A few annoying issues.
     - Can pretty easily allow form 2 to accept a list with `*[list]`
     - What about the group argument? Just have it a named parameter at the end?
         - `f(*args, **kwargs)`
+- Allow passing the file handle directly
 
 # Command Line Tools
 - [x] Switch from using show to creating a temporary pdf file, showing it, then deleting it

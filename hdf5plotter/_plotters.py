@@ -21,6 +21,9 @@ class PlotFromManyFiles(object):
         self.files = set()
         self.rcParams = {}
 
+    def __repr__(self):
+        self.groups[0]
+
     def add(self, filename, group='/'):
         """Adds the group from filename, or a list of filenames,
         to the list of groups."""
